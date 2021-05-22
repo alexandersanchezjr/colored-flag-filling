@@ -1,42 +1,59 @@
 package thread;
 
+import java.io.IOException;
+
 import model.Flag;
+import ui.ConsoleLineInterface;
 
 public class ColorPrinterThread extends Thread{
-	private final String ESC   	= 	"\u001b[";
-	private final String UP    	= 	ESC + "A";
-	private final String DOWN  	= 	ESC + "B";
-	private final String RIGHT 	= 	ESC + "C"; 
 	
 	private Flag flag;
 	
 	private int sleep;
-	private int width;
+	private int height;
 	private int max;
-	private boolean mode;
 	private int color;
+	private int x;
+	private int y;
+		
+	private ConsoleLineInterface cli;
 	
-	private String printedFlag;
-	
-	public ColorPrinterThread (Flag flag, int color, int sleep, int width, int max) {
+	public ColorPrinterThread (Flag flag, int color, int sleep, int height, int max, int initialRow, ConsoleLineInterface cli) {
 		this.flag = flag;
 		this.color = color;
 		this.sleep = sleep;
-		this.width = width;
+		this.height = height;
 		this.max = max;
+		x = 1;
+		y = initialRow;
+		this.cli = cli;
 	}
 	
-	public void printFlag () {
-		printedFlag += ESC+"2J";
-		printedFlag += ESC+"0G"+ESC+"0d";
-//		printedFlag += ESC + color + "m";
-		
-		while (width < max) {
-			
+	@Override
+	public void run() {
+		try {
+			printFlag();
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	public String getPrintedFlag () {
-		return printedFlag;
+	public void printFlag () throws InterruptedException, IOException {
+		cli.clearInterface();
+		cli.positionCursor(x, y);
+		int initialRow = y;
+		
+		int columns = 1;
+		while (columns < max) {
+			columns++;
+			for (int i = 0; i < height; i++) {
+				cli.updateUI(flag.printFlagPortion(color), x, y);
+				Thread.sleep(sleep);
+				y++;
+			}
+			x++;
+			y = initialRow;
+		}
 	}
+
 }
