@@ -12,3 +12,5 @@ The program design (class diagram) is documented in the following [link](https:/
 ***Operative System:*** Windows 10 x64 
 
 ***Development Environment:*** Eclipse IDE
+
+**NOTE:** Is suggested to use [Windows Terminal](https://www.microsoft.com/es-co/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab) to can use the whole text formatting characteristics of the program.
